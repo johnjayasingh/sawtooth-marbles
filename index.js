@@ -3,17 +3,16 @@
 const {
     TransactionProcessor
 } = require('sawtooth-sdk/processor')
-const IntegerKeyHandler = require('./handler')
+const MarbleHandler = require('./handler')
 
-if (process.env.VALIDATOR_URL < 3) {
-    console.log('missing a validator address')
-    process.exit(1)
+if (process.env.VALIDATOR_URL) {
+    console.error('missing a validator address')
 }
 
-const address = process.env.VALIDATOR_URL
+const address = process.env.VALIDATOR_URL || 'tcp://validator:4004'
 
 const transactionProcessor = new TransactionProcessor(address)
 
-transactionProcessor.addHandler(new IntegerKeyHandler())
+transactionProcessor.addHandler(new MarbleHandler())
 
 transactionProcessor.start()

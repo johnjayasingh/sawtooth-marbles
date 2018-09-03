@@ -1,3 +1,11 @@
+const crypto = require('crypto');
+const {
+    TransactionHandler
+} = require('sawtooth-sdk/processor/handler')
+const {
+    InvalidTransaction
+} = require('sawtooth-sdk/processor/exceptions')
+
 const _decodePayload = (payload) => new Promise((resolve, reject) => {
     try {
         return JSON.parse(payload);
@@ -27,11 +35,11 @@ const _toInvalidPayload = (field) => {
     throw new InvalidTransaction(`${field} Data Field contains invalid value/ doesn't contain value`)
 }
 
-const FAMILY_NAME = process.env.FAMILY_NAME;
-const FAMILY_VERSION = process.env.FAMILY_VERSION;
+const FAMILY_NAME = process.env.FAMILY_NAME || 'marble';
+const FAMILY_VERSION = process.env.FAMILY_VERSION || '1.0';
 const FAMILY_NAMESPACE = _hash(FAMILY_NAME).substring(0, 6);
 
-class IntegerKeyHandler extends TransactionHandler {
+class MarbleHandler extends TransactionHandler {
 
     constructor() {
         super(FAMILY_NAME, [FAMILY_VERSION], [FAMILY_NAMESPACE])
@@ -77,3 +85,5 @@ class IntegerKeyHandler extends TransactionHandler {
         }).catch(_toInvalidTransaction);
     }
 }
+
+module.exports = MarbleHandler
