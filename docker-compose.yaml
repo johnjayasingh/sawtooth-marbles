@@ -16,13 +16,13 @@
 version: "2.1"
 
 services:
-  contract:
-    container_name: contract
+  contract-marble:
+    container_name: contract-marble
     build:
       context: .
-      dockerfile: ./contract/Dockerfile
+      # dockerfile: ./Dockerfile
     environment:
-      - 'VALIDATOR_URL=marble'
+      - 'FAMILY_NAME=marble'
       - 'VALIDATOR_URL=tcp://validator:4004'
       - 'FAMILY_VERSION=1.0'
     depends_on:
@@ -44,8 +44,8 @@ services:
       - "4004:4004"
     # start the validator with an empty genesis batch
     entrypoint: "bash -c \"\
-        sawadm keygen && \
-        sawtooth keygen my_key && \
+        sawadm keygen --force && \
+        sawtooth keygen my_key --force && \
         sawset genesis -k /root/.sawtooth/keys/my_key.priv && \
         sawadm genesis config-genesis.batch && \
         sawtooth-validator -vv \
@@ -62,13 +62,3 @@ services:
     depends_on:
       - validator
     entrypoint: sawtooth-rest-api -C tcp://validator:4004 --bind rest-api:8008
-
-  shell:
-    image: hyperledger/sawtooth-all:1.0
-    container_name: sawtooth-shell-default
-    depends_on:
-      - rest-api
-    entrypoint: "bash -c \"\
-        sawtooth keygen && \
-        tail -f /dev/null \
-        \""
