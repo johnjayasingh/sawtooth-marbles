@@ -22,6 +22,7 @@ services:
       context: .
       dockerfile: ./contract/Dockerfile
     environment:
+      - 'VALIDATOR_URL=marble'
       - 'VALIDATOR_URL=tcp://validator:4004'
       - 'FAMILY_VERSION=1.0'
     depends_on:
